@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link href="styles.css?29/04/2026" rel="stylesheet" type="text/css" media="all" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Send me shit</title>
+		<link rel="icon" type="image/x-icon" href="/images/icon.png" />
+		<meta content="LucasTheGuy's website thingy?????? i think????????????" property="og:title" />
+		<meta content="Send me a message you coward" property="og:description" />
+		<meta content="/" property="og:url" />
+		<meta content="/images/icon.png" property="og:image" />
+		<meta content="DodgerBlue" data-react-helmet="true" name="theme-color" />
+		<style>
+			#drawingCanvas {
+			  border: 2px solid DodgerBlue;
+			  display: block;
+			  margin-top: 10px;
+			  background-color: #fff;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+		<div class="main">
+			<h1>Send me a message</h1>
+			<h2>and I’ll probably reply to it on Bluesky</h2>
+
+			<label>Name (optional):</label>
+			<br />
+			<input type="text" id="name" placeholder="Jonathan Doey" autocomplete="off" />
+			<br />
+			<br />
+
+			<label>Message:</label>
+			<br />
+			<textarea id="msg" rows="5" cols="40" placeholder="this website fucking sucks dude" autocomplete="off"></textarea>
+			<br />
+			<br />
+
+			<label>Send an image:</label>
+			<br />
+			<input type="file" id="imageFile" style="position: relative; top: 5px; border: 5px solid white;background-color: #fff;display: block;margin: 0 auto;" />
+			<br />
+
+			<label>Or draw something:</label>
+			<br />
+			<button onclick="eraser()">Eraser</button>
+			<button onclick="aiartistrepellant()">Pencil</button>
+			<br />
+			<br />
+			<canvas id="drawingCanvas" width="400" height="300" style="border: 5px solid black;background-color: #fff;display: block;margin: 0 auto;"></canvas>
+			<br />
+			<button onclick="clearCanvas()">Clear Drawing</button>
+			<br />
+			<br />
+
+			<button onclick="submit()">Submit</button>
+
+			<!-- Signature Pad library -->
+
+			<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.1/dist/signature_pad.umd.min.js"></script>
+			<script>
+					// this code is a fucking mess dude im never touching this again
+				  const canvas = document.getElementById('drawingCanvas');
+				  const ctx = canvas.getContext('2d');
+
+					// Fill canvas with white
+
+				function getWhitePNG(signaturePad) {
+				  	ctx.save();
+				  	ctx.globalCompositeOperation = 'destination-over';
+				  	ctx.fillStyle = 'white';
+				  	ctx.fillRect(0, 0, canvas.width, canvas.height);
+				  	ctx.restore();
+				  	return canvas.toDataURL('image/png');
+				}
+
+				  const signaturePad = new SignaturePad(canvas, {
+					minWidth: 2,
+					maxWidth: 2,
+					penColor: "black"
+				  });
+
+					// Clear canvas button
+				function clearCanvas() {
+					signaturePad.clear();
+				  };
+
+				function eraser() {
+					signaturePad.minWidth = 4;
+				    signaturePad.maxWidth = 4;
+					signaturePad.penColor = "white";
+
+				}
+
+				function aiartistrepellant() {
+					signaturePad.minWidth = 2;
+				    signaturePad.maxWidth = 2;
+					signaturePad.penColor = "black";
+
+				}
+
+				async function submit() {
+					const name = document.getElementById("name").value || "Anonymous";
+				    const msg = document.getElementById("msg").value;
+				    const fileInput = document.getElementById("imageFile").files[0]; // Normal image input
+
+				    const formData = new FormData();
+				    formData.append("payload_json", JSON.stringify({content: msg, username: name}));
+
+				    // Add drawing if present
+				    if (!signaturePad.isEmpty()) {
+				  		ctx.save();
+				  		ctx.globalCompositeOperation = 'destination-over';
+				  		ctx.fillStyle = 'white';
+				  		ctx.fillRect(0, 0, canvas.width, canvas.height);
+				  		ctx.restore();
+
+				  		const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+						formData.append("file", blob, "drawing.png");
+					}
+					// Add normal image if selected
+				    if (fileInput) {
+				      formData.append("file", fileInput, fileInput.name);
+				    }
+					   await fetch("https://tiny-snowflake-178b.lucas-cabure2011.workers.dev/", {method: "POST", body: formData});
+					   				    alert("Message sent!");
+				    signaturePad.clear();
+				    fillCanvasWhite();
+				    document.getElementById("msg").value = "";
+				    document.getElementById("name").value = "";
+				    document.getElementById("imageFile").value = "";
+				  }
+			</script>
+			</div>
+			</div>
+	</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+	<head>
+		<title>RSS Feed</title>
+		<link href="elements.css?24102025" rel="stylesheet" type="text/css" media="all" />
+		<meta content="A Casa-Do-Contra" property="og:title" />
+		<meta content="Capítulo 1" property="og:description" />
+		<meta content="https://lucastheguy.nekoweb.org/TheBackwardsHouse/ch1" property="og:url" />
+		<meta content="https://file.garden/aPLVV7Bv-XUF9QCk/a%20casa%20do%20contra/ch1/favicon.png" property="og:image" />
+		<style>body: black;</style>
+	</head>
+
+	<body>
+		<h1>Notícias</h1>
+		<ul>
+			<xsl:for-each select="rss/channel/item">
+				<div class="pre-pre-post">
+					<div class="pre-post" style="overflow:hidden!important">
+						<div id="post-lucastheguy-nekoweb-org-initialtrad" class="post-box t-classic" style="width:100%!important;max-height:400px!important;max-width:1000px!important;position:relative!important">
+							<div class="post-box-inner">
+								<span class="post-top-dot"></span>
+								<span class="post-date" style="position:relative!important"><xsl:value-of select="pubDate" /></span>
+								<h4 class="post-title" style="position:relative!important"><xsl:value-of select="title" /></h4>
+								<p class="post-description" style="position:relative!important"><xsl:value-of select="description" /></p>
+								<a href="{link} " class="post-link" target="_blank" rel="noopener ugc" style="position:relative!important">
+									<small class="post-author" style="position:relative!important">lucastheguy.nekoweb.org</small>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</xsl:for-each>
+		</ul>
+	</body>
+</html>
